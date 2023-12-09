@@ -5,11 +5,12 @@ module Day05 where
 import Data.Char
 import Data.Foldable
 import Data.Monoid
+import Data.Maybe
 
 
 main :: IO ()
 main = do
-  input <- (map words . lines) <$> readFile "input.txt"
+  input <- map words . lines <$> readFile "input.txt"
   print $ part1 input
   print $ part2 input
 
@@ -28,7 +29,7 @@ part2 = waysToBeat . parse
 waysToBeat :: (Int, Int) -> Int
 waysToBeat (time, distance) = first (time, time - 1, 1) - first (1, 2, time) + 1
   where
-    first = maybe 0 id . getFirst . findFirstIn
+    first = fromMaybe 0 . getFirst . findFirstIn
     findFirstIn (s, s', e) =
       fold
         [ First (Just hold)

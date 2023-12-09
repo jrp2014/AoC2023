@@ -4,8 +4,7 @@
 -- https://hackage.haskell.org/package/polynomial-0.7.3/docs/Math-Polynomial-Interpolation.html
 -- The code is more general than needed to solve these puzzles as it doesn't assume that the points
 -- are a fixed distance apart.  (This means that it we need to use rationals, rather Ints.
--- Anyway, divided differences 
-
+-- Anyway, divided differences
 
 module Day09 where
 
@@ -73,7 +72,10 @@ part2 xys = polyInterp xys 0
 main :: IO ()
 main = do
   input <- readFile "input.txt"
-  let pinput = map (\l -> zip (map (toRational @Int) [1 ..]) ((map (toRational . read @Int) . words) l)) $ lines input
+  let pinput =
+        zip (map (toRational @Int) [1 ..])
+          . (map (toRational . read @Int) . words)
+          <$> lines input
 
   print $ sum $ map part1 pinput
   print $ sum $ map part2 pinput

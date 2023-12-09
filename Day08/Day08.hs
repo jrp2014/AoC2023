@@ -43,11 +43,11 @@ main = do
   let path1 = mkPath "AAA"
   let paths2 = [mkPath start | (start, _, _) <- nodes, last start == 'A']
 
-  print $ (findIndex' part1 path1)
+  print (findIndex' part1 path1)
 
   unless (all (isTrivial part2 (length steps)) paths2) (fail "input not trivial")
 
-  print $ (foldl1 lcm (map (findIndex' part2) paths2))
+  print (foldl1 lcm (map (findIndex' part2) paths2))
 
 -- Verifies that we actually got one of the trivial input files.
 
