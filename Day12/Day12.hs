@@ -38,7 +38,7 @@ import GHC.Arr qualified as GA
 main :: IO ()
 main =
  do raw <- readFile "input.txt"
-    let input = map ((\(xs, ys) -> (xs, read ( '[' : ys ++ "]"))) . (break ( == ' '))) $ lines raw
+    let input = map (\ (xs, ys) -> (xs, read ('[' : ys ++ "]"))) . break (== ' ')$ lines raw
     print (sum [ways g s | (s,g) <- input])
     print (sum [ways (concat (replicate 5 g)) (unfoldSprings s) | (s,g) <- input])
 
