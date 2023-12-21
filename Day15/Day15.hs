@@ -1,6 +1,3 @@
-{-# LANGUAGE ImportQualifiedPost #-}
-{-# LANGUAGE QuasiQuotes #-}
-
 -- |
 -- Module      : Main
 -- Description : Day 15 solution
@@ -27,7 +24,7 @@ parseCmd s = (lbl, parseCmd' cmd)
   where
     (lbl, cmd) = span (`notElem` "=-") s
     parseCmd' ('=' : cmd') = Just $ read cmd'
-    parseCmd' ("-") = Nothing
+    parseCmd' "-" = Nothing
 
 -- |
 --
