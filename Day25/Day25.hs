@@ -1,15 +1,13 @@
-module Day25 where
-
--- import Data.Containers.ListUtils (nubOrd)
+module Main where
 
 import Data.Function (on)
 import Data.Graph.Inductive
-import Data.Graph.Inductive.Basic
-import Data.Graph.Inductive.Query.MaxFlow
-import Data.List (delete, intersect, maximumBy, nub, (\\))
-import Data.Maybe
-import qualified Data.Set as S
-import Data.Tuple
+import Data.List (delete, maximumBy, nub, (\\))
+import Data.Maybe (fromJust)
+import Data.Tuple (swap)
+
+-- inspired by https://www.reddit.com/r/adventofcode/comments/18qbsxs/comment/ketzp94/?utm_source=share&utm_medium=web2x&context=3
+-- Could probably be done with a Map from Component to Set of Component, rather than a Graph
 
 type Input = [(Component, [Component])]
 
@@ -17,6 +15,7 @@ type Component = String
 
 type Connection = (String, String)
 
+-- The graph does not need to be labelled to solve the problem, but it's handy for debugging
 type Diagram = Gr String String
 
 parse :: [[String]] -> Input
@@ -37,11 +36,14 @@ mkDiagram n e = undir $ mkGraph (map swap n') e'
     n' = zip n [1 ..]
     e' = map (\(from, to) -> (fromJust $ lookup from n', fromJust $ lookup to n', from ++ " " ++ to)) e
 
-type NodeSet = S.Set Node
-
-solve :: Diagram -> [Node]
-solve g = loop (nodes g)
+solve :: Diagram -> Int
+solve g = group1size * (order g - group1size)
   where
+    group1 :: [Node]
+    group1 = loop (nodes g)
+
+    group1size = length group1 :: Int
+
     loop :: [Node] -> [Node]
     loop s = if sum (map count s) == 3 then s else loop (delete (maximumBy (compare `on` count) s) s)
       where
@@ -50,16 +52,14 @@ solve g = loop (nodes g)
 
 main :: IO ()
 main = do
-  input <- parse <$> map words . lines <$> readFile "input.txt"
+  input <- parse . map words . lines <$> readFile "test.txt"
 
-  print $ nds input
-  print $ egs input
+  -- print $ nds input
+  -- print $ egs input
 
-  let gr = mkDiagram (nds input) (egs input)
+  let diagram = mkDiagram (nds input) (egs input)
 
-  putStrLn $ prettify gr
+  -- putStrLn $ prettify diagram
 
-  let lsolution = length $ solve gr
-
-  print $ order gr
-  print $ (lsolution * (order gr - lsolution))
+  -- print $ order diagram
+  print $ solve diagram
